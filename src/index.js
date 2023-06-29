@@ -1,21 +1,22 @@
 import express from 'express';
+import requestIp from 'request-ip';
 
 const app = express();
-const port = process.env.PORT || 3000; // Use the dynamic port assigned by Heroku or fallback to 3000
+const port = process.env.PORT || 3000;
 
-
-app.set('trust proxy', true);
+app.use(requestIp.mw());
 
 app.get('/ip', (req, res) => {
-  const clientIp = req.connection.remoteAddress;
+    let clientIp = requestIp.getClientIp(req);
 
-  const response = {
-    ip: clientIp
-  };
+    const response = {
+        ip: clientIp
+    };
 
-  res.json(response);
+    res.json(response);
 });
 
 app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
+    console.log(`Server is running on port ${port}`);
 });
+
