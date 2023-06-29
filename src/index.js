@@ -9,6 +9,18 @@ const port = process.env.PORT || 3000;
 
 app.use(requestIp.mw());
 
+app.get('/', (req, res) => {
+    let clientIp = requestIp.getClientIp(req);
+    let geolocation = ip2location.getAll(clientIp);
+
+    const response = {
+        ip: clientIp,
+        isInUS: geolocation.country_short === "US" ? "yes" : "no"
+    };
+
+    res.json(response);
+});
+
 app.get('/ip', (req, res) => {
     let clientIp = requestIp.getClientIp(req);
     let geolocation = ip2location.getAll(clientIp);
